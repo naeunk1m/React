@@ -6,13 +6,13 @@ import { useState } from 'react';
 import data from './data.js';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import Detail from './routes/Detail';
-
+import axios from 'axios';
 
 
 
 function App() {
 
-  let [shoes] = useState(data)
+  let [shoes, setShoes] = useState(data)
   let navigate = useNavigate()
 
   return (
@@ -55,10 +55,21 @@ function App() {
                 }
               </div>
             </div>
-           
+            <button onClick={() => {
+              axios.get('https://codingapple1.github.io/shop/data2.json')
+                .then((결과) => {
+                  let copy = [...shoes, ...결과.data]
+                  setShoes(copy)
+                })
+                .catch(() => {
+                  console.log('실패함 ㅅㄱ')
+                })
+              axios.get('https://codingapple1.github.io/shop/data3.json')
+              .then((결과) => {})
+            }}>버튼</button>
           </>
         } />
-        <Route path='/detail/:id' element={<Detail shoes={shoes}/>} />
+        <Route path='/detail/:id' element={<Detail shoes={shoes} />} />
 
 
         <Route path='/about' element={<About />} >
@@ -67,8 +78,8 @@ function App() {
         </Route>
 
         <Route path='/event' element={<Event />}>
-          <Route path='/event/one' element={<div>첫 주문시 양배추즙 서비스</div>}/>
-          <Route path='/event/two' element={<div>생일기념 쿠폰받기</div>}/>
+          <Route path='/event/one' element={<div>첫 주문시 양배추즙 서비스</div>} />
+          <Route path='/event/two' element={<div>생일기념 쿠폰받기</div>} />
 
         </Route>
 
