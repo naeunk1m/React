@@ -1,9 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components';
 import { Nav } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
+import { Context1 } from './../App.js'
+import { addItem } from "./../store.js"
 
 function Detail(props) {
+
+    let dispatch = useDispatch()
+
+
     let [Alert, setAlert] = useState(true);
     let [count, setCount] = useState(0)
     let { id } = useParams();
@@ -12,6 +19,7 @@ function Detail(props) {
         return x.id == id
     })
     let [탭, 탭변경] = useState(0)
+    let [fade2, setFade2] = useState('')
 
     useEffect(() => {
         setTimeout(() => {
@@ -25,10 +33,16 @@ function Detail(props) {
         }
     }, [num])
 
+    useEffect(() => {
+        setFade2('end')
+        return () => {
+            setFade2('')
+        }
+    }, [])
+
     return (
 
-        <div className="container">
-
+        <div className={'container start ' + fade2}>
             {Alert == true
                 ? <div className='alert alert-warning'>
                     2초 이내 구매시 할인
@@ -38,6 +52,7 @@ function Detail(props) {
             <button onClick={() => { setCount(count + 1) }}>버튼</button>
             <br />
             <input onChange={(e) => { setNum(e.target.value) }} />
+
             <div className="row">
                 < div className="col-md-6" >
                     <img src="https://codingapple1.github.io/shop/shoes1.jpg" width="100%" />
@@ -46,7 +61,9 @@ function Detail(props) {
                     <h4 className="pt-5">{찾은상품.title}</h4>
                     <p>{찾은상품.content}</p>
                     <p>{찾은상품.price}원</p>
-                    <button className="btn btn-danger">주문하기</button>
+                    <button className="btn btn-danger" onClick={() => {
+                        dispatch(addItem({ id: 1, name: 'Red Knit', count: 1 }))
+                    }}>주문하기</button>
                 </div>
             </div >
             <Nav variant="tabs" defaultActiveKey="link0">
@@ -68,23 +85,24 @@ function Detail(props) {
 }
 
 
-function TabContent({탭}){
+function TabContent({ 탭 }) {
+
 
     let [fade, setFade] = useState('')
 
-    useEffect(()=>{
+    useEffect(() => {
         setTimeout(() => {
             setFade('end')
         }, 100);
-        return ()=> {
+        return () => {
             setFade('')
         }
     }, [탭])
     return (
-      <div className={'start ' + fade}>
-        { [<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][탭] }
-      </div>
+        <div className={'start ' + fade}>
+            {[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][탭]}
+        </div>
     )
-  }
+}
 
 export default Detail
