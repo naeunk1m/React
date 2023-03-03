@@ -14,6 +14,15 @@ export let Context1 = createContext()
 
 function App() {
 
+  useEffect(()=>{
+    localStorage.setItem('watched', JSON.stringify( [] ))
+  },[])
+
+  let obj = { name: 'kim' }
+  localStorage.setItem('data', JSON.stringify(obj))
+  let 꺼낸거 = localStorage.getItem('data')
+  console.log(JSON.parse(꺼낸거).name)
+
   let [shoes, setShoes] = useState(data)
   let [재고, 재고변경] = useState([10, 11, 12])
   let navigate = useNavigate()
@@ -58,7 +67,7 @@ function App() {
                   })
                 }
               </div>
-            </div> 
+            </div>
             <button onClick={() => {
               axios.get('https://codingapple1.github.io/shop/data2.json')
                 .then((결과) => {
