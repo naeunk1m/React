@@ -2,17 +2,29 @@ import logo from './logo.svg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar, Container, Nav, NavLink, Button } from 'react-bootstrap'
-import { useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import data from './data.js';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import Detail from './routes/Detail';
 import axios from 'axios';
+import Cart from './routes/Cart'
 
+export let Context1 = createContext()
 
 
 function App() {
 
+  useEffect(()=>{
+    localStorage.setItem('watched', JSON.stringify( [] ))
+  },[])
+
+  let obj = { name: 'kim' }
+  localStorage.setItem('data', JSON.stringify(obj))
+  let 꺼낸거 = localStorage.getItem('data')
+  console.log(JSON.parse(꺼낸거).name)
+
   let [shoes, setShoes] = useState(data)
+  let [재고, 재고변경] = useState([10, 11, 12])
   let navigate = useNavigate()
 
   return (
@@ -25,6 +37,7 @@ function App() {
           <Nav className='me-auto'>
             <Nav.Link onClick={() => { navigate('/') }}>Home</Nav.Link>
             <Nav.Link onClick={() => { navigate('/detail') }}>Detail</Nav.Link>
+            <Nav.Link onClick={() => { navigate('/cart') }}>장바구니</Nav.Link>
           </Nav>
         </Container>
       </Navbar>
@@ -65,12 +78,16 @@ function App() {
                   console.log('실패함 ㅅㄱ')
                 })
               axios.get('https://codingapple1.github.io/shop/data3.json')
-              .then((결과) => {})
+                .then((결과) => { })
             }}>버튼</button>
           </>
         } />
-        <Route path='/detail/:id' element={<Detail shoes={shoes} />} />
+        <Route path='/detail/:id' element={
+          <Detail shoes={shoes} />
+        } />
 
+
+        <Route path="/cart" element={<Cart />} />
 
         <Route path='/about' element={<About />} >
           <Route path='/about/member' element={<div>멤버임</div>} />
